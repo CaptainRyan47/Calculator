@@ -38,6 +38,8 @@ document.querySelectorAll('#buttons .number').forEach(
 );
 document.querySelector('#decimal').addEventListener('click', () => decimalHandler('.'));
 
+document.addEventListener('keydown', (button) => keyboardInput(button));
+
 //Other Buttons:
 document.querySelector('#add').addEventListener('click', (button) => inputOperator(button.target.id));
 document.querySelector('#subtract').addEventListener('click', (button) => inputOperator(button.target.id));
@@ -48,18 +50,7 @@ document.querySelector('#equals').addEventListener('click', () => {
   resetInputs();
 });
 document.querySelector('#clear').addEventListener('click', () => resetInputs(true));
-document.querySelector('#delete').addEventListener('click', () => {
-  if (readyForSecondInput) {
-    if (secondInput.charAt(secondInput.length - 1) === '.') decimalToggle = false;
-    secondInput = secondInput.substring(0, secondInput.length - 1);
-    display.textContent = secondInput;
-  }
-  else {
-    if (firstInput.charAt(firstInput.length - 1) === '.') decimalToggle = false;
-    firstInput = firstInput.substring(0, firstInput.length - 1);
-    display.textContent = firstInput;
-  }
-});
+document.querySelector('#delete').addEventListener('click', () => deleteButton());
 
 //-----------------------------------
 
@@ -81,6 +72,17 @@ function decimalHandler(decimal) {
   decimalToggle = true;
 }
 
+function keyboardInput(button) {
+  if (button.key.charAt(0) === 'F') return; //Prevents F keys from imputing to calculator
+  button.preventDefault();
+  if (button.key === 'Enter' || button.key === '=') display.textContent = operate();
+  else if (button.key === '+' || button.key === '-' || button.key === '*' || button.key === '/') {
+    inputOperator(button.key);
+  } else if (button.key === '.') decimalHandler(button.key);
+  else if (button.key === 'Backspace') deleteButton();
+  else inputNum(button.key.replace(/\D/g, ''));
+};
+
 function inputOperator(button) {
   if (firstInput === '' && !readyForSecondInput) return;
   else if (!operator) {
@@ -95,30 +97,39 @@ function inputOperator(button) {
   }
 };
 
-function mf(num) {
-  return (Math.floor(num * 1000)) / 1000;
-}
+function deleteButton() {
+  if (readyForSecondInput) {
+    if (secondInput.charAt(secondInput.length - 1) === '.') decimalToggle = false;
+    secondInput = secondInput.substring(0, secondInput.length - 1);
+    display.textContent = secondInput;
+  }
+  else {
+    if (firstInput.charAt(firstInput.length - 1) === '.') decimalToggle = false;
+    firstInput = firstInput.substring(0, firstInput.length - 1);
+    display.textContent = firstInput;
+  }
+};
+
 
 function operate() {
   switch (operator) {
     case 'add':
+    case '+':
       return add(firstInput, secondInput);
-      break;
 
     case 'subtract':
+    case '-':
       return subtract(firstInput, secondInput);
-      break;
 
     case 'multiply':
+    case '*':
       return multiply(firstInput, secondInput);
-      break;
 
     case 'divide':
+    case '/':
       return divide(firstInput, secondInput);
-      break;
 
     default:
       return 0;
-      break;
   }
 };
