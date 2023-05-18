@@ -91,7 +91,9 @@ function inputOperator(button) {
     readyForSecondInput = true;
     decimalToggle = false;
   } else {
+    console.log(operator)
     firstInput = operate();
+    display.textContent = firstInput;
     secondInput = '';
     operator = button;
   }
@@ -101,12 +103,14 @@ function deleteButton() {
   if (readyForSecondInput) {
     if (secondInput.charAt(secondInput.length - 1) === '.') decimalToggle = false;
     secondInput = secondInput.substring(0, secondInput.length - 1);
-    display.textContent = secondInput;
+    if (secondInput === '') display.textContent = '0';
+    else display.textContent = secondInput;
   }
   else {
     if (firstInput.charAt(firstInput.length - 1) === '.') decimalToggle = false;
     firstInput = firstInput.substring(0, firstInput.length - 1);
-    display.textContent = firstInput;
+    if (firstInput === '') display.textContent = '0';
+    else display.textContent = firstInput;
   }
 };
 
