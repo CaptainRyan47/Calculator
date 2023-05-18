@@ -26,11 +26,13 @@ function resetInputs(bool) {
   readyForSecondInput = false;
   decimalToggle = false;
   if (bool) display.textContent = '0';
+  smallDisplay.innerHTML = '<br>';
 };
 
 //-----------------------------------
 
 const display = document.querySelector('#display');
+const smallDisplay = document.querySelector('#small-display');
 
 //Number Buttons:
 document.querySelectorAll('#buttons .number').forEach(
@@ -41,10 +43,10 @@ document.querySelector('#decimal').addEventListener('click', () => decimalHandle
 document.addEventListener('keydown', (button) => keyboardInput(button));
 
 //Other Buttons:
-document.querySelector('#add').addEventListener('click', (button) => inputOperator(button.target.id));
-document.querySelector('#subtract').addEventListener('click', (button) => inputOperator(button.target.id));
-document.querySelector('#multiply').addEventListener('click', (button) => inputOperator(button.target.id));
-document.querySelector('#divide').addEventListener('click', (button) => inputOperator(button.target.id));
+document.querySelector('#add').addEventListener('click', () => inputOperator('+'));
+document.querySelector('#subtract').addEventListener('click', () => inputOperator('-'));
+document.querySelector('#multiply').addEventListener('click', () => inputOperator('×'));
+document.querySelector('#divide').addEventListener('click', () => inputOperator('÷'));
 document.querySelector('#equals').addEventListener('click', () => {
   display.textContent = operate();
   resetInputs();
@@ -75,10 +77,14 @@ function decimalHandler(decimal) {
 function keyboardInput(button) {
   if (button.key.charAt(0) === 'F') return; //Prevents F keys from imputing to calculator
   button.preventDefault();
-  if (button.key === 'Enter' || button.key === '=') display.textContent = operate();
-  else if (button.key === '+' || button.key === '-' || button.key === '*' || button.key === '/') {
-    inputOperator(button.key);
-  } else if (button.key === '.') decimalHandler(button.key);
+  if (button.key === 'Enter' || button.key === '=') {
+    display.textContent = operate();
+    if (operator) smallDisplay.textContent = firstInput + operator + secondInput + '=';
+  }
+  else if (button.key === '+' || button.key === '-') inputOperator(button.key);
+  else if (button.key === '*') inputOperator('×');
+  else if (button.key === '/') inputOperator('÷');
+  else if (button.key === '.') decimalHandler(button.key);
   else if (button.key === 'Backspace') deleteButton();
   else inputNum(button.key.replace(/\D/g, ''));
 };
@@ -89,6 +95,7 @@ function inputOperator(button) {
     operator = button;
     console.log(operator);
     readyForSecondInput = true;
+    smallDisplay.textContent = firstInput + operator;
     decimalToggle = false;
   } else {
     console.log(operator)
@@ -96,6 +103,7 @@ function inputOperator(button) {
     display.textContent = firstInput;
     secondInput = '';
     operator = button;
+    smallDisplay.textContent = firstInput + operator;
   }
 };
 
@@ -117,20 +125,16 @@ function deleteButton() {
 
 function operate() {
   switch (operator) {
-    case 'add':
     case '+':
       return add(firstInput, secondInput);
 
-    case 'subtract':
     case '-':
       return subtract(firstInput, secondInput);
 
-    case 'multiply':
-    case '*':
+    case '×':
       return multiply(firstInput, secondInput);
 
-    case 'divide':
-    case '/':
+    case '÷':
       return divide(firstInput, secondInput);
 
     default:

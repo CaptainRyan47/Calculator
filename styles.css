@@ -1,4 +1,4 @@
-:root{}
+:root {}
 
 body {
   background-color: aqua;
@@ -13,6 +13,10 @@ body {
   gap: 1rem;
 }
 
+p {
+  margin: 3px;
+}
+
 #calculator {
   flex-direction: column;
   margin: 40px auto;
@@ -22,16 +26,22 @@ body {
   background-color: black;
 }
 
-#display {
+#display-box {
   border: 5px solid green;
   background-color: white;
   text-align: right;
+  margin-bottom: 10px;
+}
+
+#display {
+  font-size: 2rem;
 }
 
 #buttons {
   grid-template-columns: repeat(4, 1fr);
 }
 
-#clear, #delete {
+#clear,
+#delete {
   grid-column: span 2;
 }
