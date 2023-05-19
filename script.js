@@ -26,7 +26,7 @@ function resetInputs(bool) {
   readyForSecondInput = false;
   decimalToggle = false;
   if (bool) display.textContent = '0';
-  smallDisplay.innerHTML = '<br>';
+  if (bool) smallDisplay.innerHTML = '<br>';
 };
 
 //-----------------------------------
@@ -47,10 +47,7 @@ document.querySelector('#add').addEventListener('click', () => inputOperator('+'
 document.querySelector('#subtract').addEventListener('click', () => inputOperator('-'));
 document.querySelector('#multiply').addEventListener('click', () => inputOperator('×'));
 document.querySelector('#divide').addEventListener('click', () => inputOperator('÷'));
-document.querySelector('#equals').addEventListener('click', () => {
-  display.textContent = operate();
-  resetInputs();
-});
+document.querySelector('#equals').addEventListener('click', () => equalsHandler());
 document.querySelector('#clear').addEventListener('click', () => resetInputs(true));
 document.querySelector('#delete').addEventListener('click', () => deleteButton());
 
@@ -77,10 +74,7 @@ function decimalHandler(decimal) {
 function keyboardInput(button) {
   if (button.key.charAt(0) === 'F') return; //Prevents F keys from imputing to calculator
   button.preventDefault();
-  if (button.key === 'Enter' || button.key === '=') {
-    display.textContent = operate();
-    if (operator) smallDisplay.textContent = firstInput + operator + secondInput + '=';
-  }
+  if (button.key === 'Enter' || button.key === '=') equalsHandler();
   else if (button.key === '+' || button.key === '-') inputOperator(button.key);
   else if (button.key === '*') inputOperator('×');
   else if (button.key === '/') inputOperator('÷');
@@ -121,6 +115,15 @@ function deleteButton() {
     else display.textContent = firstInput;
   }
 };
+
+function equalsHandler() {
+  let temp;
+  temp = operate();
+  display.textContent = temp;
+  if (operator) smallDisplay.textContent = firstInput + operator + secondInput + '=';
+  resetInputs();
+  firstInput = temp;
+}
 
 
 function operate() {
