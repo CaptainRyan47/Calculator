@@ -7,8 +7,21 @@ function subtract(a, b) { return (Math.floor((a - b) * 1000)) / 1000 };
 function multiply(a, b) { return (Math.floor((a * b) * 1000)) / 1000 };
 
 function divide(a, b) {
-  if (b === '0') console.log('boom!');
-  return (Math.floor((a / b) * 1000)) / 1000
+  if (b === '0') {
+    let divideBy0 = 'I\'m sorry, Dave. I\'m afraid I can\'t do that.'
+    let i = 0;
+
+    while (i < divideBy0.length) {
+      loop(i);
+      i++
+    }
+
+    function loop(i) {
+      setTimeout(function () {
+        display.textContent += divideBy0[i];
+      }, 50 * i)
+    }
+  } else return (Math.floor((a / b) * 1000)) / 1000;
 };
 
 //-----------------------------------
